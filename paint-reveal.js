@@ -17,43 +17,46 @@
   var brushColors = ['#F4C9CC', '#FBE3B0', '#C9E4D8', '#C7DDF2', '#DED0EE'];
   var brushTextures = [];
 
-  // Builds one elongated brush-stroke texture: a soft elliptical body with
-  // a handful of thin bristle streaks running along its length, so the dab
-  // reads as a flat brush rather than a round dot.
+  // Builds one elongated brush-stroke texture out of individual bristle
+  // strands — no solid filled body — so the dab reads as separate hairs
+  // dragging paint rather than a flat, crayon-like block of color. Each
+  // strand has its own stagger, width, and opacity, and a couple of them
+  // skip a short gap to mimic a dry-brush pass.
   function buildBrushTexture(color) {
     var w = 220, h = 70;
     var off = document.createElement('canvas');
     off.width = w;
     off.height = h;
     var octx = off.getContext('2d');
-    var cx = w / 2, cy = h / 2;
+    var cy = h / 2;
 
-    octx.save();
-    octx.translate(cx, cy);
-    octx.scale(1, h / w);
-    var bodyGrad = octx.createRadialGradient(0, 0, 0, 0, 0, w / 2);
-    bodyGrad.addColorStop(0, color + 'B0');
-    bodyGrad.addColorStop(0.65, color + '70');
-    bodyGrad.addColorStop(1, color + '00');
-    octx.fillStyle = bodyGrad;
-    octx.beginPath();
-    octx.arc(0, 0, w / 2, 0, Math.PI * 2);
-    octx.fill();
-    octx.restore();
-
-    // Bristle streaks: thin, slightly wavy lines along the stroke length
-    // with varying opacity so the fill isn't perfectly flat.
-    var bristleCount = 7;
+    var bristleCount = 13;
     for (var i = 0; i < bristleCount; i++) {
-      var yOff = (i / (bristleCount - 1) - 0.5) * h * 0.7;
-      var wobble = (Math.random() - 0.5) * 6;
-      octx.beginPath();
-      octx.moveTo(w * 0.08, cy + yOff);
-      octx.quadraticCurveTo(cx, cy + yOff + wobble, w * 0.92, cy + yOff);
-      octx.strokeStyle = color + (Math.random() > 0.5 ? '55' : '30');
-      octx.lineWidth = 2 + Math.random() * 3;
+      var yOff = (i / (bristleCount - 1) - 0.5) * h * 0.85 + (Math.random() - 0.5) * 5;
+      var xStart = w * (0.04 + Math.random() * 0.1);
+      var xEnd = w * (0.86 + Math.random() * 0.1);
+      var wobble = (Math.random() - 0.5) * 7;
+      var midX = (xStart + xEnd) / 2;
+
+      var hasGap = Math.random() < 0.35;
+      var gapAt = xStart + (xEnd - xStart) * (0.35 + Math.random() * 0.3);
+      var gapWidth = (xEnd - xStart) * 0.08;
+
+      octx.strokeStyle = color + (Math.random() > 0.45 ? '70' : '40');
+      octx.lineWidth = 1.2 + Math.random() * 2.6;
       octx.lineCap = 'round';
+
+      octx.beginPath();
+      octx.moveTo(xStart, cy + yOff);
+      octx.quadraticCurveTo(midX, cy + yOff + wobble, hasGap ? gapAt - gapWidth : xEnd, cy + yOff + (hasGap ? wobble * 0.5 : 0));
       octx.stroke();
+
+      if (hasGap) {
+        octx.beginPath();
+        octx.moveTo(gapAt + gapWidth, cy + yOff + wobble * 0.5);
+        octx.quadraticCurveTo(midX, cy + yOff + wobble, xEnd, cy + yOff);
+        octx.stroke();
+      }
     }
 
     return off;
@@ -102,7 +105,7 @@
       var y = y0 + dy * t;
       var length = 70 + Math.random() * 40;
       var jitter = (Math.random() - 0.5) * 0.15;
-      var alpha = 0.4 + Math.random() * 0.25;
+      var alpha = 0.32 + Math.random() * 0.2;
       dabAt(x, y, length, angle + jitter, alpha);
     }
   }
