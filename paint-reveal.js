@@ -38,12 +38,12 @@
       var wobble = (Math.random() - 0.5) * 7;
       var midX = (xStart + xEnd) / 2;
 
-      var hasGap = Math.random() < 0.35;
+      var hasGap = Math.random() < 0.15;
       var gapAt = xStart + (xEnd - xStart) * (0.35 + Math.random() * 0.3);
-      var gapWidth = (xEnd - xStart) * 0.08;
+      var gapWidth = (xEnd - xStart) * 0.06;
 
-      octx.strokeStyle = color + (Math.random() > 0.45 ? '70' : '40');
-      octx.lineWidth = 1.2 + Math.random() * 2.6;
+      octx.strokeStyle = color + (Math.random() > 0.45 ? 'A0' : '75');
+      octx.lineWidth = 1.6 + Math.random() * 3.2;
       octx.lineCap = 'round';
 
       octx.beginPath();
@@ -92,20 +92,28 @@
     ctx.restore();
   }
 
+  // Smooth angle interpolation across the shortest rotational path, so the
+  // brush eases into direction changes instead of snapping.
+  function lerpAngle(a, b, t) {
+    var diff = ((b - a + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
+    return a + diff * t;
+  }
+
   function paintSegment(x0, y0, x1, y1) {
     var dx = x1 - x0, dy = y1 - y0;
     var dist = Math.sqrt(dx * dx + dy * dy);
-    var angle = dist > 1 ? Math.atan2(dy, dx) : lastAngle;
+    var targetAngle = dist > 1 ? Math.atan2(dy, dx) : lastAngle;
+    var angle = lerpAngle(lastAngle, targetAngle, 0.6);
     lastAngle = angle;
-    var step = 10;
+    var step = 6;
     var steps = Math.max(1, Math.floor(dist / step));
     for (var i = 0; i <= steps; i++) {
       var t = i / steps;
       var x = x0 + dx * t;
       var y = y0 + dy * t;
-      var length = 70 + Math.random() * 40;
-      var jitter = (Math.random() - 0.5) * 0.15;
-      var alpha = 0.32 + Math.random() * 0.2;
+      var length = 78 + Math.random() * 45;
+      var jitter = (Math.random() - 0.5) * 0.12;
+      var alpha = 0.5 + Math.random() * 0.25;
       dabAt(x, y, length, angle + jitter, alpha);
     }
   }
@@ -114,22 +122,31 @@
     if (last) {
       paintSegment(last.x, last.y, x, y);
     } else {
-      dabAt(x, y, 60, lastAngle, 0.4);
+      dabAt(x, y, 65, lastAngle, 0.55);
     }
     last = { x: x, y: y };
   }
 
   // Input events (mousemove especially) can fire far more often than the
-  // display refreshes. Queue the latest point and only paint once per
-  // animation frame so drawing never competes with the browser's own
-  // scroll/composite work on the main thread.
+  // display refreshes. Queue the latest raw point, but paint from a
+  // trailing "smoothed" point that eases toward it each frame — this
+  // gives the stroke a touch of brush inertia instead of snapping to
+  // every jittery mouse sample, and only paints once per animation frame
+  // so drawing never competes with the browser's own scroll/composite work.
   var pendingPoint = null;
+  var smoothPoint = null;
+  var SMOOTHING = 0.4;
   var frameQueued = false;
   function flushPaint() {
     frameQueued = false;
     if (pendingPoint) {
-      handleMove(pendingPoint.x, pendingPoint.y);
-      pendingPoint = null;
+      if (!smoothPoint) {
+        smoothPoint = { x: pendingPoint.x, y: pendingPoint.y };
+      } else {
+        smoothPoint.x += (pendingPoint.x - smoothPoint.x) * SMOOTHING;
+        smoothPoint.y += (pendingPoint.y - smoothPoint.y) * SMOOTHING;
+      }
+      handleMove(smoothPoint.x, smoothPoint.y);
     }
   }
   function queueMove(x, y) {
@@ -145,6 +162,7 @@
   }, { passive: true });
   window.addEventListener('mouseleave', function () {
     last = null;
+    smoothPoint = null;
     strokeSeed = Math.floor(Math.random() * brushTextures.length);
   });
 
@@ -157,9 +175,11 @@
     var t = e.touches[0];
     if (!t) return;
     strokeSeed = Math.floor(Math.random() * brushTextures.length);
+    smoothPoint = { x: t.clientX, y: t.clientY };
     handleMove(t.clientX, t.clientY);
   }, { passive: true });
   window.addEventListener('touchend', function () {
     last = null;
+    smoothPoint = null;
   });
 })();
