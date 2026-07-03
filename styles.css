@@ -1,0 +1,202 @@
+/* Pina Painting & Home Improvement — shared styles */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Archivo:wght@400;500;600;700&display=swap');
+
+:root {
+  --ink: #1c1a17;
+  --ink-soft: #4a453e;
+  --cream: #faf7f1;
+  --cream-2: #f2ede2;
+  --gold: #c08a2e;
+  --gold-deep: #9c6d1e;
+  --gold-line: rgba(192, 138, 46, 0.45);
+  --line: rgba(28, 26, 23, 0.1);
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Archivo', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  line-height: 1.55;
+  overflow-x: hidden;
+  position: relative;
+}
+h1, h2, h3 { font-family: var(--font-display); font-weight: 600; line-height: 1.12; }
+a { color: inherit; }
+img { max-width: 100%; display: block; }
+section { position: relative; padding: 6rem 1.5rem; z-index: 1; scroll-margin-top: 84px; }
+.container { max-width: 1120px; margin: 0 auto; }
+.eyebrow {
+  font-size: 0.78rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--gold-deep); font-weight: 600; margin-bottom: 0.9rem; display: inline-block;
+}
+.lead { font-size: 1.1rem; color: var(--ink-soft); max-width: 620px; }
+
+/* ---------- Paint canvas background layer ---------- */
+#paint-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* ---------- Nav ---------- */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(250, 247, 241, 0.88);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 1.5rem; max-width: 1200px; margin: 0 auto;
+}
+.brand { display: flex; align-items: center; gap: 0.6rem; font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.01em; text-decoration: none; color: var(--ink); }
+.brand-mark {
+  width: 36px; height: 36px; border-radius: 50%; background: var(--ink);
+  display: flex; align-items: center; justify-content: center; color: var(--gold);
+  font-family: var(--font-display); font-weight: 700; font-size: 0.95rem;
+}
+.nav-links { display: flex; align-items: center; gap: 1.75rem; flex-wrap: wrap; }
+.nav-links a { text-decoration: none; font-size: 0.9rem; letter-spacing: 0.02em; color: var(--ink); opacity: 0.8; }
+.nav-links a:hover, .nav-links a.active { opacity: 1; border-bottom: 1px solid var(--gold); }
+.nav-extra { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+.nav-links a.nav-cta {
+  display: inline-flex; align-items: center;
+  background: var(--ink); color: var(--cream); opacity: 1; padding: 0.55rem 1.1rem; border-radius: 3px;
+  font-size: 0.85rem; text-decoration: none; letter-spacing: 0.02em; white-space: nowrap;
+}
+.nav-links a.nav-cta:hover { background: var(--gold-deep); border-bottom: none; }
+.lang-toggle {
+  background: transparent; border: 1px solid var(--gold-line); color: var(--ink);
+  padding: 0.35rem 0.7rem; border-radius: 2px; font-family: var(--font-body); font-size: 0.78rem;
+  cursor: pointer; letter-spacing: 0.04em; flex-shrink: 0; line-height: 1.4;
+}
+.nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 0.4rem; }
+.nav-toggle span { display: block; width: 22px; height: 2px; background: var(--ink); margin: 5px 0; }
+
+@media (max-width: 860px) {
+  .nav-links { position: fixed; top: 64px; left: 0; right: 0; background: var(--cream); flex-direction: column;
+    align-items: flex-start; padding: 1.5rem; gap: 1.1rem; border-bottom: 1px solid var(--line);
+    transform: translateY(-140%); transition: transform 0.25s ease; }
+  .nav-links.open { transform: translateY(0); }
+  .nav-toggle { display: block; }
+  .nav-extra { width: 100%; }
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: 9.5rem 1.5rem 5rem;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+.hero h1 { font-size: clamp(2.2rem, 5.5vw, 4rem); max-width: 900px; margin: 0 auto 1.2rem; }
+.hero .lead { margin: 0 auto 2rem; text-align: center; }
+.hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem; text-decoration: none;
+  padding: 0.85rem 1.6rem; border-radius: 3px; font-size: 0.92rem; letter-spacing: 0.02em; font-weight: 600;
+}
+.btn-primary { background: var(--ink); color: var(--cream); }
+.btn-primary:hover { background: var(--gold-deep); }
+.btn-outline { border: 1px solid var(--ink); color: var(--ink); }
+.btn-outline:hover { background: var(--ink); color: var(--cream); }
+.hero-hint { margin-top: 1.75rem; font-size: 0.8rem; color: var(--ink-soft); opacity: 0.75; letter-spacing: 0.02em; }
+
+/* ---------- Sections ---------- */
+.section-alt { background: var(--cream-2); }
+.section-head { text-align: center; max-width: 640px; margin: 0 auto 3rem; }
+.section-head .lead { margin: 0 auto; text-align: center; }
+
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem; }
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.75rem; }
+@media (max-width: 860px) { .grid-3, .grid-2 { grid-template-columns: 1fr; } }
+
+.card {
+  background: var(--cream); border: 1px solid var(--line); border-radius: 6px; padding: 2rem;
+}
+.card .icon { width: 46px; height: 46px; border-radius: 50%; background: var(--ink); color: var(--gold);
+  display: flex; align-items: center; justify-content: center; margin-bottom: 1.1rem; font-size: 1.2rem; }
+.card h3 { font-size: 1.2rem; margin-bottom: 0.6rem; }
+.card p { color: var(--ink-soft); font-size: 0.95rem; }
+
+.stat-row { display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; margin-top: 2.5rem; }
+.stat { text-align: center; }
+.stat .num { font-family: var(--font-display); font-size: 2.2rem; color: var(--gold-deep); }
+.stat .label { font-size: 0.82rem; color: var(--ink-soft); letter-spacing: 0.03em; }
+
+/* ---------- Gallery ---------- */
+.gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+@media (max-width: 860px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .gallery-grid { grid-template-columns: 1fr; } }
+.gallery-item {
+  aspect-ratio: 4/3; border-radius: 6px; overflow: hidden; position: relative;
+  display: flex; align-items: flex-end; padding: 1rem; color: #fff;
+  background-size: cover; background-position: center;
+}
+.gallery-item::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.55) 100%);
+}
+.gallery-item span { position: relative; z-index: 1; font-size: 0.85rem; letter-spacing: 0.02em; }
+.placeholder-note {
+  text-align: center; font-size: 0.82rem; color: var(--ink-soft); margin-top: 1.5rem; opacity: 0.8;
+}
+
+/* ---------- Testimonials ---------- */
+.quote-card { background: var(--cream); border: 1px solid var(--line); border-radius: 6px; padding: 1.75rem; }
+.quote-card p { font-style: italic; color: var(--ink-soft); margin-bottom: 1rem; }
+.quote-card .who { font-size: 0.85rem; font-weight: 600; color: var(--ink); }
+
+/* ---------- Contact ---------- */
+.contact-wrap { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2.5rem; }
+@media (max-width: 860px) { .contact-wrap { grid-template-columns: 1fr; } }
+.contact-info-card {
+  background: var(--ink); color: var(--cream); border-radius: 8px; padding: 2.5rem;
+}
+.contact-info-card h3 { color: var(--cream); margin-bottom: 1rem; }
+.contact-line { display: flex; gap: 0.75rem; align-items: flex-start; margin-bottom: 1.1rem; font-size: 0.95rem; }
+.contact-line b { display: block; font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.15rem; }
+.contact-line a { text-decoration: none; color: var(--cream); }
+
+form.quote-form { display: flex; flex-direction: column; gap: 1rem; }
+.quote-form input, .quote-form select, .quote-form textarea {
+  width: 100%; padding: 0.85rem 1rem; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--cream); font-family: var(--font-body); font-size: 0.95rem; color: var(--ink);
+}
+.quote-form textarea { min-height: 120px; resize: vertical; }
+.quote-form label { font-size: 0.8rem; letter-spacing: 0.03em; color: var(--ink-soft); margin-bottom: -0.4rem; }
+
+/* ---------- Footer ---------- */
+footer {
+  background: var(--ink); color: var(--cream); padding: 3rem 1.5rem 2rem; position: relative; z-index: 1;
+}
+.footer-inner { max-width: 1120px; margin: 0 auto; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem; }
+.footer-inner .brand { color: var(--cream); }
+footer .cols { display: flex; gap: 3rem; flex-wrap: wrap; }
+footer .col h4 { font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.9rem; }
+footer .col a { display: block; text-decoration: none; color: var(--cream); opacity: 0.85; font-size: 0.9rem; margin-bottom: 0.55rem; }
+.footer-bottom { text-align: center; font-size: 0.78rem; opacity: 0.6; margin-top: 2.5rem; }
+
+/* ---------- WhatsApp floating button ---------- */
+.wa-float {
+  position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 60;
+  background: #25D366; color: #fff; width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; text-decoration: none;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.25); font-size: 1.5rem;
+}
+
+/* ---------- Page header (inner pages) ---------- */
+.page-header { padding: 9rem 1.5rem 3.5rem; text-align: center; position: relative; z-index: 1; }
+.page-header h1 { font-size: clamp(2rem, 4.5vw, 3rem); margin-bottom: 0.8rem; }
+
+/* ---------- Bilingual toggle ---------- */
+[data-lang="en"] [data-es] { display: none; }
+[data-lang="es"] [data-en] { display: none; }
